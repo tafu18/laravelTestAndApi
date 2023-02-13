@@ -10,28 +10,28 @@ class UserTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_example()
+    public function testExample()
     {
         $response = $this->get('/');
 
         $response->assertStatus(200);
     }
 
-    public function test_about_page()
+    public function testAboutPage()
     {
         $response = $this->get('/about');
 
         $response->assertStatus(200);
     }
 
-    public function test_contact_page()
+    public function testContactPage()
     {
         $response = $this->get('/contact');
 
         $response->assertStatus(404);
     }
 
-    public function test_welcome_page_documentation_laracast()
+    public function testWelcomePageDocumentationLaracast()
     {
         $response = $this->get('/');
 
@@ -39,7 +39,7 @@ class UserTest extends TestCase
         $response->assertSee(['laracast', 'Documentation']);
     }
 
-    public function test_login_redirect_to_dashboard_successfully()
+    public function testLoginRedirectToDashboardSuccessfully()
     {
         $response = $this->post('/login', [
             'email' => 'test@test.com',
@@ -55,7 +55,7 @@ class UserTest extends TestCase
         $response->assertRedirect('/');
     }
 
-    public function test_auth_user_can_access_welcome_page()
+    public function testAuthUserCanAccessWelcomePage()
     {
         $user = User::factory()->create();
 
@@ -63,14 +63,14 @@ class UserTest extends TestCase
         $response->assertStatus(200);
     }
 
-    public function test_unauth_user_cannot_access_welcome_page()
+    public function testUnauthUserCannotAccessWelcomePage()
     {
         $response = $this->get('dashboard');
         $response->assertStatus(302);
         $response->assertRedirect('login');
     }
 
-    public function test_auth_user_can_access_dashboard()
+    public function testAuthUserCanAccessDashboard()
     {
         $user = User::factory()->create();
 
