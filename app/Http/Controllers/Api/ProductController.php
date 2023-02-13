@@ -19,7 +19,6 @@ class ProductController extends Controller
             'product' => $product,
         ]);
     }
-    
 
     public function store(StoreProductRequest $request)
     {
@@ -56,8 +55,6 @@ class ProductController extends Controller
     {
         $product->delete();
 
-        return response()->json([
-            'message' => 'saas',
-        ], 204);
+        return response()->json([], 204);
     }
 }
