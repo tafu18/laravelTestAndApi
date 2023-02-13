@@ -11,34 +11,34 @@ class ProductTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_product_route_return_ok()
+    public function testProductRouteReturnOk()
     {
         $response = $this->get('/product');
         $response->assertStatus(200);
         $response->assertSee('Products Index');
     }
 
-    public function test_product_has_name()
+    public function testProductHasName()
     {
         $product = Product::factory()->create();
 
         $this->assertNotEmpty($product->name);
     }
 
-    public function test_products_are_empty()
+    public function testProductsAreEmpty()
     {
         $response = $this->get('/product');
         $response->assertSee('No Products');
     }
 
-    public function test_products_are_not_empty()
+    public function testProductsAreNotEmpty()
     {
         $product = Product::factory()->create();
         $response = $this->get('/product');
         $response->assertDontSee('No Products');
     }
 
-    public function test_product_name()
+    public function testProductName()
     {
         $product = Product::factory()->create([
             'name' => 'Orange',
@@ -51,7 +51,7 @@ class ProductTest extends TestCase
         $response->assertSee($product->name);
     }
 
-    public function test_auth_can_see_the_buy_button()
+    public function testAuthCanSeeTheBuyButton()
     {
         $admin = User::factory()->create(['is_admin' => 1]);
         $product = Product::factory()->create();
@@ -59,7 +59,7 @@ class ProductTest extends TestCase
         $response->assertSee('Edit');
     }
 
-    public function test_descprition()
+    public function testDescprition()
     {
         $user = User::factory()->create();
         $product = Product::factory()->create([
@@ -73,40 +73,40 @@ class ProductTest extends TestCase
         $this->assertEquals('Test Description Test', $product->description);
     }
 
-    public function test_auth_cannot_see_the_buy_button()
+    public function testAuthCannotSeeTheBuyButton()
     {
         $user = User::factory()->create();
         $response = $this->actingAs($user)->get('/product');
         $response->assertDontSee('Edit');
     }
 
-    public function test_auth_admin_can_see_create_link()
+    public function testAuthAdminCanSeeCreateLink()
     {
         $admin = User::factory()->create(['is_admin' => 1]);
         $response = $this->actingAs($admin)->get('/product');
         $response->assertSee('Create');
     }
 
-    public function test_unauth_cannot_see_create_link()
+    public function testUnauthCannotSeeCreateLink()
     {
         $response = $this->get('/product');
         $response->assertDontSee('Create');
     }
 
-    public function test_auth_admin_can_visit_the_products_create_route()
+    public function testAuthAdminCanVisitTheProductsCreateRoute()
     {
         $admin = User::factory()->create(['is_admin' => 1]);
         $response = $this->actingAs($admin)->get('/product/create');
         $response->assertStatus(200);
     }
 
-    public function test_unauth_user_cannot_visit_the_products_create_route()
+    public function testUnauthUserCannotVisitTheProductsCreateRoute()
     {
         $response = $this->get('/product/create');
         $response->assertStatus(403);
     }
 
-    public function test_admin_can_store_new_product()
+    public function testAdminCanStoreNewProduct()
     {
         $admin = User::factory()->create(['is_admin' => 1]);
         $response = $this->actingAs($admin)->post('/product', [
@@ -121,7 +121,7 @@ class ProductTest extends TestCase
         $this->assertDatabaseHas('products', ['name' => 'Apple']);
     }
 
-    public function test_admin_can_see_the_edit_product_page()
+    public function testAdminCanSeeTheEditProductPage()
     {
         $admin = User::factory()->create(['is_admin' => 1]);
         $product = Product::factory()->create();
