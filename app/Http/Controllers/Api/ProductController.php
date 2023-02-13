@@ -19,6 +19,7 @@ class ProductController extends Controller
             'product' => $product,
         ]);
     }
+    
 
     public function store(StoreProductRequest $request)
     {
