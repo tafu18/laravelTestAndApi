@@ -36,7 +36,6 @@ class CategoryController extends Controller
             'message' => 'category !',
             'category' => $category,
         ]);
-        
     }
 
     public function update(Request $request, Category $category)
@@ -58,11 +57,27 @@ class CategoryController extends Controller
         return response()->json([], 204);
     }
 
-    public function showProducts(Request $request, Category $category){
-        $products = Category::find($request->id);
-        
+    public function showProducts(Category $category)
+    {
+        $products = Category::find($category->id)->getProducts;
+
         return response()->json([
-            'products' => $products->getProducts,
+            'products' => $products,
+        ], 200);
+    }
+
+    public function showProductsName(Category $category)
+    {
+        $products = Category::find($category->id)->getProducts;
+
+        foreach ($products as $product) {
+            $productsName[] = $product->name;
+            $productsType[] = $product->type;
+        }
+
+        return response()->json([
+            'productsName' => $productsName,
+            'productsType' => $productsType,
         ], 200);
     }
 }

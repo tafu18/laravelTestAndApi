@@ -22,7 +22,7 @@ class ProductTest extends TestCase
     {
         $product = Product::factory()->create();
 
-        $this->assertNotEmpty($product->name);
+        $this->assertEmpty($product->name);
     }
 
     public function testProductsAreEmpty()
@@ -42,8 +42,10 @@ class ProductTest extends TestCase
     {
         $product = Product::factory()->create([
             'name' => 'Orange',
+            'category_id' => 5,
             'type' => 'Fruit',
             'price' => 12.50,
+
         ]);
 
         $response = $this->get('product');
@@ -64,6 +66,7 @@ class ProductTest extends TestCase
         $user = User::factory()->create();
         $product = Product::factory()->create([
             'name' => 'Orange',
+            'category_id' => 5,
             'type' => 'Fruit',
             'price' => 12.55,
             'description' => 'Test Description Test',
@@ -111,6 +114,7 @@ class ProductTest extends TestCase
         $admin = User::factory()->create(['is_admin' => 1]);
         $response = $this->actingAs($admin)->post('/product', [
             'name' => 'Apple',
+            'category_id' => 5,
             'type' => 'Fruit',
             'price' => 12.99,
         ]);
@@ -140,6 +144,7 @@ class ProductTest extends TestCase
         $product = Product::first();
         $response = $this->actingAs($admin)->put('/product/'.$product->id, [
             'name' => 'TestName',
+            'category_id' => 5,
             'type' => 'TestType',
             'price' => 14.99,
         ]);
