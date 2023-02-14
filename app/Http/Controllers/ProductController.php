@@ -52,9 +52,4 @@ class ProductController extends Controller
 
         return redirect()->route('product.index');
     }
-
-    public function denemeFonk()
-    {
-        return null;
-    }
 }
