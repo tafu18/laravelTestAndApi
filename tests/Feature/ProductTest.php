@@ -113,17 +113,17 @@ class ProductTest extends TestCase
     public function testAdminCanStoreNewProduct()
     {
         $admin = User::factory()->create(['is_admin' => 1]);
+        Category::factory()->create();
         $response = $this->actingAs($admin)->post('/product', [
             'name' => 'Apple',
-            'category_id' => Category::factory(),
+            'category_id' => Category::first()->id,
             'type' => 'Fruit',
             'price' => 12.99,
-            'description' => 'Deneme Deneme Deneme Deneme'
+            'description' => 'Deneme Deneme Deneme Deneme',
         ]);
-        
-        $response->assertSessionHasNoErrors();
 
         $response->assertRedirect('/product');
+        $response->assertSessionHasNoErrors();
 
         $this->assertDatabaseHas('products', ['name' => 'Apple']);
     }
@@ -147,7 +147,6 @@ class ProductTest extends TestCase
         $product = Product::first();
         $response = $this->actingAs($admin)->put('/product/'.$product->id, [
             'name' => 'TestName',
-            'category_id' => Category::factory(),
             'type' => 'TestType',
             'price' => 14.99,
         ]);

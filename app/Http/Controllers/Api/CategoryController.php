@@ -59,7 +59,7 @@ class CategoryController extends Controller
 
     public function showProducts(Category $category)
     {
-        $products = Category::find($category->id)->getProducts;
+        $products = Category::find($category->id)->products;
 
         return response()->json([
             'products' => $products,
@@ -68,7 +68,7 @@ class CategoryController extends Controller
 
     public function showProductsName(Category $category)
     {
-        $products = Category::find($category->id)->getProducts;
+        $products = Category::find($category->id)->products;
 
         foreach ($products as $product) {
             $productsName[] = $product->name;

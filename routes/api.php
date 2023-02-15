@@ -2,6 +2,10 @@
 
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\ProductController;
+use App\Http\Resources\CategoryResource;
+use App\Http\Resources\ProductResource;
+use App\Models\Category;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -36,4 +40,12 @@ Route::controller(CategoryController::class)->group(function () {
     Route::delete('/categories/{category}', 'destroy');
     Route::get('/categories/showProducts/{category}', 'showProducts');
     Route::get('/categories/showProductsName/{category}', 'showProductsName');
+});
+
+Route::get('/category/{id}', function ($id) {
+    return new CategoryResource(Category::findOrFail($id));
+});
+
+Route::get('/product/{id}', function ($id) {
+    return new ProductResource(Product::findOrFail($id));
 });
