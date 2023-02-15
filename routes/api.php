@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\CategoryController;
+use App\Http\Controllers\Api\DashboardController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Resources\CategoryResource;
 use App\Http\Resources\ProductResource;
@@ -41,6 +42,8 @@ Route::controller(CategoryController::class)->group(function () {
     Route::get('/categories/showProducts/{category}', 'showProducts');
     Route::get('/categories/showProductsName/{category}', 'showProductsName');
 });
+
+Route::get('/dashboard', [DashboardController::class, 'index']);
 
 Route::get('/category/{id}', function ($id) {
     return new CategoryResource(Category::findOrFail($id));
