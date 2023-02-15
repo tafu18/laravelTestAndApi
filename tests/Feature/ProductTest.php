@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Category;
 use App\Models\Product;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -22,7 +23,7 @@ class ProductTest extends TestCase
     {
         $product = Product::factory()->create();
 
-        $this->assertEmpty($product->name);
+        $this->assertNotEmpty($product->name);
     }
 
     public function testProductsAreEmpty()
@@ -42,7 +43,7 @@ class ProductTest extends TestCase
     {
         $product = Product::factory()->create([
             'name' => 'Orange',
-            'category_id' => 5,
+            'category_id' => Category::factory(),
             'type' => 'Fruit',
             'price' => 12.50,
 
@@ -66,7 +67,7 @@ class ProductTest extends TestCase
         $user = User::factory()->create();
         $product = Product::factory()->create([
             'name' => 'Orange',
-            'category_id' => 5,
+            'category_id' => Category::factory(),
             'type' => 'Fruit',
             'price' => 12.55,
             'description' => 'Test Description Test',
@@ -114,14 +115,16 @@ class ProductTest extends TestCase
         $admin = User::factory()->create(['is_admin' => 1]);
         $response = $this->actingAs($admin)->post('/product', [
             'name' => 'Apple',
-            'category_id' => 5,
+            'category_id' => Category::factory(),
             'type' => 'Fruit',
             'price' => 12.99,
+            'description' => 'Deneme Deneme Deneme Deneme'
         ]);
+        
         $response->assertSessionHasNoErrors();
 
         $response->assertRedirect('/product');
-        $response->assertStatus(302);
+
         $this->assertDatabaseHas('products', ['name' => 'Apple']);
     }
 
@@ -144,7 +147,7 @@ class ProductTest extends TestCase
         $product = Product::first();
         $response = $this->actingAs($admin)->put('/product/'.$product->id, [
             'name' => 'TestName',
-            'category_id' => 5,
+            'category_id' => Category::factory(),
             'type' => 'TestType',
             'price' => 14.99,
         ]);
