@@ -29,7 +29,7 @@ Route::controller(ProductController::class)->group(function () {
     Route::get('/products', 'index');
     Route::post('/products', 'store');
     Route::get('/products/{product}', 'show');
-    Route::put('/products/{id}', 'update');
+    Route::put('/products/{product}', 'update');
     Route::delete('/products/{product}', 'destroy');
 });
 
@@ -37,13 +37,17 @@ Route::controller(CategoryController::class)->group(function () {
     Route::get('/categories', 'index');
     Route::post('/categories', 'store');
     Route::get('/categories/{category}', 'show');
-    Route::put('/categories/{id}', 'update');
+    Route::put('/categories/{category}', 'update');
     Route::delete('/categories/{category}', 'destroy');
     Route::get('/categories/showProducts/{category}', 'showProducts');
     Route::get('/categories/showProductsName/{category}', 'showProductsName');
 });
 
 Route::get('/dashboard', [DashboardController::class, 'index']);
+
+Route::get('/categories-api-resource', function () {
+    return CategoryResource::collection(Category::all());
+});
 
 Route::get('/category/{id}', function ($id) {
     return new CategoryResource(Category::findOrFail($id));

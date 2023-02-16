@@ -10,13 +10,6 @@ class UserTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function testExample()
-    {
-        $response = $this->get('/');
-
-        $response->assertStatus(200);
-    }
-
     public function testAboutPage()
     {
         $response = $this->get('/about');

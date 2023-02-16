@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Admin;
+use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -27,6 +28,9 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 Route::get('/about', function () {
     return view('welcome');
 });
+
+Route::get('/category', [CategoryController::class, 'categories'])->name('category.index');
+Route::get('/category-relation/{category}', [CategoryController::class, 'relationProducts'])->name('category.relation');
 
 Route::get('/product', [ProductController::class, 'index'])->name('product.index');
 

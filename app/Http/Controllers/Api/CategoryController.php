@@ -3,81 +3,59 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreCategoryRequest;
+use App\Http\Requests\UpdateCategoryRequest;
 use App\Models\Category;
-use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
-    public function index()
+    public function index(): string
     {
         $category = Category::all();
-        $message = $category ? 'Category Table is NOT Empty' : 'Category Table is Empty';
 
         return response()->json([
-            'message' => $message,
             'category' => $category,
         ]);
     }
 
-    public function store(Request $request)
+    public function store(StoreCategoryRequest $request): string
     {
         $category = Category::create($request->all());
-        $message = $category ? 'Store is Successfully' : 'Store is NOT Successfully';
 
         return response()->json([
-            'message' => $message,
             'category' => $category,
         ], 201);
     }
 
-    public function show(Category $category)
+    public function show(Category $category): string
     {
         return response()->json([
-            'message' => 'category !',
             'category' => $category,
         ]);
     }
 
-    public function update(Request $request, Category $category)
+    public function update(UpdateCategoryRequest $request, Category $category): string
     {
-        $category = Category::findOrFail($request->id);
         $category->update($request->all());
-        $message = $category ? 'Update is Successfully' : 'Update is NOT Successfully';
 
         return response()->json([
-            'message' => $message,
             'category' => $category,
         ]);
     }
 
-    public function destroy(Category $category)
+    public function destroy(Category $category): string
     {
         $category->delete();
 
         return response()->json([], 204);
     }
 
-    public function showProducts(Category $category)
+    public function showProducts(Category $category): string
     {
         $products = Category::find($category->id)->products;
 
         return response()->json([
             'products' => $products,
-        ], 200);
-    }
-
-    public function showProductsName(Category $category)
-    {
-        $products = Category::find($category->id)->products;
-
-        foreach ($products as $product) {
-            $productsName[] = $product->name;
-            $productsType[] = $product->type;
-        }
-
-        return response()->json([
-            'productsName' => $productsName,
-            'productsType' => $productsType,
         ], 200);
     }
 }

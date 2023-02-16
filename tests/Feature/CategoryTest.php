@@ -7,11 +7,11 @@ use App\Models\Product;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-class ProductTest extends TestCase
+class CategoryTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function testProductHasName()
+    public function testCategoryHasName()
     {
         $category = Category::factory()->create();
 
@@ -22,7 +22,7 @@ class ProductTest extends TestCase
         $this->assertNotEmpty($product->name);
     }
 
-    public function testProductAndCategoryHas()
+    public function testCategoriesAreNotEmpty()
     {
         $category = Category::factory()->create();
 
@@ -30,11 +30,10 @@ class ProductTest extends TestCase
             'category_id' => $category->id,
         ]);
 
-        $this->assertCount(1, Product::all());
-        $this->assertEquals($category->id, $product->category_id);
+        $this->assertNotEmpty($category->name);
     }
 
-    public function testProductName()
+    public function testCategoryName()
     {
         $category = Category::factory()->create(['name' => 'Tech']);
         $product = Product::factory()->create([
@@ -45,6 +44,22 @@ class ProductTest extends TestCase
 
         ]);
 
-        $this->assertEquals($product->name, 'Orange');
+        $this->assertEquals($category->name, 'Tech');
+    }
+
+    public function testHasProductName()
+    {
+        $category = Category::factory()->create();
+        $product = Product::factory()->create(['category_id' => $category->id]);
+
+        $this->assertTrue($category->products->contains($product));
+    }
+
+    public function testCategoryAndProductMatch()
+    {
+        $category = Category::factory()->create();
+        $product = Product::factory()->create(['category_id' => $category->id]);
+
+        $this->assertEquals($category->id, $product->category_id);
     }
 }

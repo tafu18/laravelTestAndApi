@@ -9,10 +9,10 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        $products = Category::all()->products;
+        $datas = Category::join('products', 'categories.id', '=', 'products.category_id')->get(['categories.name as categoryName', 'products.*']);
 
         return response()->json([
-            'products' => $products,
+            'datas' => $datas,
         ], 200);
     }
 }
