@@ -28,23 +28,23 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 Route::get('/about', function () {
     return view('welcome');
 });
-
+/* 
 Route::get('/category', [CategoryController::class, 'categories'])->name('category.index');
 Route::get('/category-relation/{category}', [CategoryController::class, 'relationProducts'])->name('category.relation');
 
 Route::get('/product', [ProductController::class, 'index'])->name('product.index');
 
 Route::get('/product/create', [ProductController::class, 'create'])->middleware('admin')->name('product.create');
-Route::post('/product', [ProductController::class, 'store'])->middleware('admin')->name('product.store');
+Route::post('/product', [ProductController::class, 'store'])->middleware('admin')->name('product.store'); */
 
 /* Route::get('/product/edit', [ProductController::class, 'edit'])->middleware('admin')->name('product.edit');
 Route::post('/product', [ProductController::class, 'update'])->middleware('admin')->name('product.update'); */
 
-Route::get('product/{product}/edit', [ProductController::class, 'edit'])->middleware('admin')->name('product.edit');
+/* Route::get('product/{product}/edit', [ProductController::class, 'edit'])->middleware('admin')->name('product.edit');
 Route::put('product/{product}', [ProductController::class, 'update'])->middleware('admin')->name('product.update');
 
 Route::get('product/{product}', [ProductController::class, 'destroy'])->middleware('admin')->name('product.destroy');
-
+*/
 Route::get('/dashboard', function () {
     return view('dashboard');
-})->middleware('auth')->name('dashboard');
+})->middleware('auth')->name('dashboard'); 

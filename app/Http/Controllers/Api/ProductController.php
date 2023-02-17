@@ -6,10 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
 use App\Models\Product;
+use Illuminate\Http\JsonResponse;
 
 class ProductController extends Controller
 {
-    public function index(): string
+    public function index(): JsonResponse
     {
         $product = Product::all();
 
@@ -18,32 +19,33 @@ class ProductController extends Controller
         ]);
     }
 
-    public function store(StoreProductRequest $request): string
+    public function store(StoreProductRequest $request): JsonResponse
     {
-        $product = Product::create($request->all());
+        $product = Product::create($request->validated());
 
         return response()->json([
             'product' => $product,
         ], 201);
     }
 
-    public function show(Product $product): string
+    public function show(Product $product): JsonResponse
     {
+        //show category with product
         return response()->json([
             'product' => $product,
         ]);
     }
 
-    public function update(UpdateProductRequest $request, Product $product): string
+    public function update(UpdateProductRequest $request, Product $product): JsonResponse
     {
-        $product->update($request->all());
+        $product->update($request->validated());
 
         return response()->json([
             'product' => $product,
         ]);
     }
 
-    public function destroy(Product $product): string
+    public function destroy(Product $product): JsonResponse
     {
         $product->delete();
 

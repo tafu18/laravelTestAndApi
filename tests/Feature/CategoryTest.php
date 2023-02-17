@@ -41,7 +41,6 @@ class CategoryTest extends TestCase
             'category_id' => $category->id,
             'type' => 'Fruit',
             'price' => 12.50,
-
         ]);
 
         $this->assertEquals($category->name, 'Tech');
@@ -61,5 +60,13 @@ class CategoryTest extends TestCase
         $product = Product::factory()->create(['category_id' => $category->id]);
 
         $this->assertEquals($category->id, $product->category_id);
+    }
+
+    public function testProductExists()
+    {
+        $category = Category::factory()->create();
+        $product = Product::factory()->create(['category_id' => $category->id]);
+
+        $this->assertTrue($product->exists());
     }
 }

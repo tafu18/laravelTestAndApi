@@ -6,10 +6,12 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreCategoryRequest;
 use App\Http\Requests\UpdateCategoryRequest;
 use App\Models\Category;
+use App\Models\Product;
+use Illuminate\Http\JsonResponse;
 
 class CategoryController extends Controller
 {
-    public function index(): string
+    public function index(): JsonResponse 
     {
         $category = Category::all();
 
@@ -18,41 +20,41 @@ class CategoryController extends Controller
         ]);
     }
 
-    public function store(StoreCategoryRequest $request): string
+    public function store(StoreCategoryRequest $request): JsonResponse
     {
-        $category = Category::create($request->all());
+        $category = Category::create($request->validated());
 
         return response()->json([
             'category' => $category,
         ], 201);
     }
 
-    public function show(Category $category): string
+    public function show(Category $category): JsonResponse
     {
         return response()->json([
             'category' => $category,
         ]);
     }
 
-    public function update(UpdateCategoryRequest $request, Category $category): string
+    public function update(UpdateCategoryRequest $request, Category $category): JsonResponse
     {
-        $category->update($request->all());
+        $category->update($request->validated());
 
         return response()->json([
             'category' => $category,
         ]);
     }
 
-    public function destroy(Category $category): string
+    public function destroy(Category $category): JsonResponse
     {
         $category->delete();
 
         return response()->json([], 204);
     }
 
-    public function showProducts(Category $category): string
+    public function showProducts(Category $category): JsonResponse
     {
-        $products = Category::find($category->id)->products;
+        $products = $category->products;
 
         return response()->json([
             'products' => $products,
