@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
+use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\JsonResponse;
 
@@ -31,8 +32,11 @@ class ProductController extends Controller
     public function show(Product $product): JsonResponse
     {
         //show category with product
+
         return response()->json([
+            'product' => $product->category,
             'product' => $product,
+
         ]);
     }
 

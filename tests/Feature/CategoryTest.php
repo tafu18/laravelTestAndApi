@@ -3,7 +3,6 @@
 namespace Tests\Feature;
 
 use App\Models\Category;
-use App\Models\Product;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -11,62 +10,59 @@ class CategoryTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function testCategoryHasName()
+    public function testIndexCategory()
     {
-        $category = Category::factory()->create();
+        $category = Category::factory()->count(10)->create();
+        $response = $this->get('api/categories');
 
-        $product = Product::factory()->create([
-            'category_id' => $category->id,
+        $this->assertDatabaseCount('categories', 10);
+    }
+
+    public function testStoreCategory()
+    {
+        $response = $this->post('api/categories', [
+            'name' => 'Tech',
         ]);
 
-        $this->assertNotEmpty($product->name);
+        $response->assertStatus(201);
+        $this->assertDatabaseCount('categories', 1);
+        $this->assertDatabaseHas('categories', [
+            'name' => 'Tech',
+        ]);
     }
 
-    public function testCategoriesAreNotEmpty()
+    public function testShowCategory()
     {
         $category = Category::factory()->create();
 
-        $product = Product::factory()->create([
-            'category_id' => $category->id,
+        $response = $this->get('api/categories/'.$category->id);
+        $response->assertStatus(200);
+        $response->assertSee($category->name);
+
+        $this->assertDatabaseCount('categories', 1);
+    }
+
+    public function testUpdateCategory()
+    {
+        $category = Category::factory()->create();
+
+        $response = $this->put('api/categories/'.$category->id, [
+            'name' => 'Agriculture',
         ]);
 
-        $this->assertNotEmpty($category->name);
+        $category->refresh();
+        $response->assertStatus(200);
+        $this->assertEquals($category->name, 'Agriculture');
     }
 
-    public function testCategoryName()
-    {
-        $category = Category::factory()->create(['name' => 'Tech']);
-        $product = Product::factory()->create([
-            'name' => 'Orange',
-            'category_id' => $category->id,
-            'type' => 'Fruit',
-            'price' => 12.50,
-        ]);
-
-        $this->assertEquals($category->name, 'Tech');
-    }
-
-    public function testHasProductName()
+    public function testDeleteCategory()
     {
         $category = Category::factory()->create();
-        $product = Product::factory()->create(['category_id' => $category->id]);
 
-        $this->assertTrue($category->products->contains($product));
-    }
+        $response = $this->delete('api/categories/'.$category->id);
+        $response->assertStatus(204);
 
-    public function testCategoryAndProductMatch()
-    {
-        $category = Category::factory()->create();
-        $product = Product::factory()->create(['category_id' => $category->id]);
-
-        $this->assertEquals($category->id, $product->category_id);
-    }
-
-    public function testProductExists()
-    {
-        $category = Category::factory()->create();
-        $product = Product::factory()->create(['category_id' => $category->id]);
-
-        $this->assertTrue($product->exists());
+        $this->assertDatabaseCount('categories', 0);
+        $this->assertModelMissing($category);
     }
 }

@@ -23,8 +23,8 @@ Route::controller(CategoryController::class)->group(function () {
     Route::post('/categories', 'store');
     Route::get('/categories/{category}', 'show');
     Route::put('/categories/{category}', 'update');
-    Route::delete('/categories/{category}', 'destroy');
-    Route::get('/categories/showProducts/{category}', 'showProducts'); 
+    Route::delete('/categories/{category}', 'destroy')->name('category.destroy');
+    Route::get('/categories/showProducts/{category}', 'showProducts');
 });
 
 Route::get('/dashboard', [DashboardController::class, 'index']);

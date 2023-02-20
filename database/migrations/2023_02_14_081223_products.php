@@ -13,8 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
+        //id name category_id type price description
         Schema::create('products', function (Blueprint $table) {
-            $table->id(); //id name type price
+            $table->id();
             $table->string('name');
             $table->bigInteger('category_id')->unsigned();
             $table->string('type');

@@ -28,7 +28,7 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 Route::get('/about', function () {
     return view('welcome');
 });
-/* 
+/*
 Route::get('/category', [CategoryController::class, 'categories'])->name('category.index');
 Route::get('/category-relation/{category}', [CategoryController::class, 'relationProducts'])->name('category.relation');
 
@@ -47,4 +47,4 @@ Route::get('product/{product}', [ProductController::class, 'destroy'])->middlewa
 */
 Route::get('/dashboard', function () {
     return view('dashboard');
-})->middleware('auth')->name('dashboard'); 
+})->middleware('auth')->name('dashboard');
