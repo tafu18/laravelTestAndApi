@@ -14,10 +14,18 @@ class DashboardTest extends TestCase
      *
      * @return void
      */
-
     use RefreshDatabase;
 
-    public function testExample()
+    public function testStatus()
+    {
+        $category = Category::factory()->create();
+        $product = Product::factory()->create();
+
+        $response = $this->get('/api/dashboard');
+        $response->assertStatus(200);
+    }
+
+/*     public function testDashboard()
     {
         $category = Category::factory()->create();
 
@@ -25,8 +33,26 @@ class DashboardTest extends TestCase
             'category_id' => $category->id,
         ]);
 
-        $response = $this->get('/api/dashboard');
+        $this->json('GET', '/api/dashboard')
+            ->assertJsonStructure(
+                [
+                    'groupByCategory' => [
+                        [
+                            'name',
+                            'counter',
+                        ],
 
-        $response->assertStatus(200);
-    }
+                    ],
+                    'last2DaysProducts',
+                    'categories',
+                    'products',
+                ]
+            )->assertJsonFragment([
+                'categories' =>1,
+                'products',
+                'last2DaysProducts',
+                'groupByCategory',
+            ])
+            ->assertStatus(200);
+    } */
 }
