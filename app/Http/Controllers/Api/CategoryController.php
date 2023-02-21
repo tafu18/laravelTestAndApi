@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreCategoryRequest;
 use App\Http\Requests\UpdateCategoryRequest;
+use App\Http\Resources\CategoryResource;
 use App\Models\Category;
 use Illuminate\Http\JsonResponse;
 
@@ -12,10 +13,8 @@ class CategoryController extends Controller
 {
     public function index(): JsonResponse
     {
-        $category = Category::all();
-
         return response()->json([
-            'category' => $category,
+            'data' => CategoryResource::collection(Category::paginate(5)),
         ]);
     }
 
@@ -24,14 +23,14 @@ class CategoryController extends Controller
         $category = Category::create($request->validated());
 
         return response()->json([
-            'category' => $category,
+            'data' => new CategoryResource($category),
         ], 201);
     }
 
     public function show(Category $category): JsonResponse
     {
         return response()->json([
-            'category' => $category,
+            'data' => $category,
         ]);
     }
 
@@ -40,7 +39,7 @@ class CategoryController extends Controller
         $category->update($request->validated());
 
         return response()->json([
-            'category' => $category,
+            'data' => $category,
         ]);
     }
 
@@ -56,7 +55,7 @@ class CategoryController extends Controller
         $products = $category->products;
 
         return response()->json([
-            'products' => $products,
+            'data' => $products,
         ], 200);
     }
 }

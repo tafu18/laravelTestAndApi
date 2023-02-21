@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
+use App\Http\Resources\ProductResource;
 use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\JsonResponse;
@@ -13,10 +14,9 @@ class ProductController extends Controller
 {
     public function index(): JsonResponse
     {
-        $product = Product::all();
-
+        //use product collectıon ProductResource::collection
         return response()->json([
-            'product' => $product,
+            'data' => ProductResource::collection(Product::paginate(5)),
         ]);
     }
 
@@ -25,7 +25,7 @@ class ProductController extends Controller
         $product = Product::create($request->validated());
 
         return response()->json([
-            'product' => $product,
+            'data' => new ProductResource($product),
         ], 201);
     }
 
@@ -34,9 +34,7 @@ class ProductController extends Controller
         //show category with product
 
         return response()->json([
-            'product' => $product->category,
-            'product' => $product,
-
+            'data' => $product->load('category'),
         ]);
     }
 
@@ -45,7 +43,7 @@ class ProductController extends Controller
         $product->update($request->validated());
 
         return response()->json([
-            'product' => $product,
+            'data' => $product,
         ]);
     }
 

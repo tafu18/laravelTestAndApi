@@ -12,23 +12,27 @@ class DashboardController extends Controller
 {
     public function index()
     {
-
-        // return array countain this (use sql queries): 
+        // return array countain this (use sql queries):
         // return all total categories
         // return all total products
         // reteun how many product in every category
         // reteun total products create in last 2 days
 
-        $categories = Category::all();
-        $products = Product::all();
-        $groupByCategory = DB::table('categories')->join('products', 'categories.id', '=', 'products.category_id')
-        ->select('categories.name', DB::raw('count(*) as counter'))->groupBy('categories.name')->get();
-        
-        $last2DaysProducts = Product::where( 'created_at', '>', Carbon::now()->subDays(2))->get();
+        $categories = Category::count();
+
+        $products = Product::count();
+
+        $groupByCategory = Category::join('products', 'categories.id', '=', 'products.category_id')
+            ->select('categories.name', DB::raw('count(*) as counter'))
+            ->groupBy('categories.name')
+            ->get();
+
+        $last2DaysProducts = Product::where('created_at', '>', Carbon::now()->subDays(2))->get();
+
         return response()->json([
             'categories' => $categories,
             'products' => $products,
-            'groupByCategory' => $groupByCategory, 
+            'groupByCategory' => $groupByCategory,
             'last2DaysProducts' => $last2DaysProducts,
         ], 200);
     }
