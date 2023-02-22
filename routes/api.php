@@ -11,6 +11,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::controller(ProductController::class)->group(function () {
+    Route::get('/products/filter', 'filterProduct');
+    Route::get('/products/search', 'searchProduct');
     Route::get('/products', 'index');
     Route::post('/products', 'store');
     Route::get('/products/{product}', 'show');
@@ -23,7 +25,7 @@ Route::controller(CategoryController::class)->group(function () {
     Route::post('/categories', 'store');
     Route::get('/categories/{category}', 'show');
     Route::put('/categories/{category}', 'update');
-    Route::delete('/categories/{category}', 'destroy')->name('category.destroy');
+    Route::delete('/categories/{category}', 'destroy');
     Route::get('/categories/showProducts/{category}', 'showProducts');
 });
 

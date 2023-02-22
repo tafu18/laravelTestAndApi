@@ -13,8 +13,9 @@ class ProductTest extends TestCase
     use RefreshDatabase;
     use WithFaker;
 
-    protected string $endpoint = "api/products/"; 
-    protected string $ProductsTable = "products";
+    protected string $endpoint = 'api/products/';
+
+    protected string $ProductsTable = 'products';
 
     public function testIndexProduct()
     {
@@ -52,24 +53,26 @@ class ProductTest extends TestCase
         $response->assertStatus(200);
         $response->assertSee($product->name);
 
-        $this->assertDatabaseCount('products', 1);
+        $this->assertDatabaseCount($this->ProductsTable, 1);
     }
 
     public function testUpdateProduct()
     {
         $category = Category::factory()->create();
         $product = Product::factory()->create();
-        $response = $this->put($this->endpoint.$product->id, [
+
+        $data = [
             'name' => 'Orange',
             'category_id' => $category->id,
             'type' => 'Fruit',
             'price' => 12.55,
             'description' => 'Deneme Deneme Deneme Deneme Deneme ',
-        ]);
+        ];
+
+        $this->put($this->endpoint.$product->id, $data)->assertStatus(200);
 
         $product->refresh();
-        $response->assertStatus(200);
-        $this->assertEquals($product->name, 'Orange');
+        $this->assertEquals($product->name, $data['name']);
     }
 
     public function testDeleteProduct()
@@ -79,7 +82,7 @@ class ProductTest extends TestCase
         $response = $this->delete($this->endpoint.$product->id);
         $response->assertStatus(204);
 
-        $this->assertDatabaseCount('products', 0);
+        $this->assertDatabaseCount($this->ProductsTable, 0);
         $this->assertModelMissing($product);
     }
 }

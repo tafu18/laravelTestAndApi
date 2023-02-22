@@ -6,9 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
 use App\Http\Resources\ProductResource;
-use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
@@ -16,7 +16,7 @@ class ProductController extends Controller
     {
         //use product collectıon ProductResource::collection
         return response()->json([
-            'data' => ProductResource::collection(Product::paginate(5)),
+            'data' => ProductResource::collection(Product::paginate(1)),
         ]);
     }
 
@@ -52,5 +52,23 @@ class ProductController extends Controller
         $product->delete();
 
         return response()->json([], 204);
+    }
+
+    public function filterProduct(Request $request)
+    {
+        $category_id = $request->query('category_id');
+
+
+        $filteredProducts = Product::where('category_id', $category_id)->get();;
+
+        return  response()->json(['data' => $filteredProducts], 200);
+    }
+
+    public function searchProduct(Request $request){
+        $text = $request->query('text');
+
+        $searchedProducts = Product::where('name', 'LIKE', "%$text%")->orWhere('description', 'LIKE', "%$text%")->get();
+
+        return response()->json(['data' => $searchedProducts], 200);
     }
 }

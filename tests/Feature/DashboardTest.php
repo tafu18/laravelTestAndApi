@@ -16,16 +16,18 @@ class DashboardTest extends TestCase
      */
     use RefreshDatabase;
 
+    protected string $endpoint = 'api/dashboard';
+
     public function testStatus()
     {
         $category = Category::factory()->create();
         $product = Product::factory()->create();
 
-        $response = $this->get('/api/dashboard');
-        $response->assertStatus(200);
+        $response = $this->get($this->endpoint)
+        ->assertStatus(200);
     }
 
-/*     public function testDashboard()
+    public function testDashboard()
     {
         $category = Category::factory()->create();
 
@@ -33,7 +35,10 @@ class DashboardTest extends TestCase
             'category_id' => $category->id,
         ]);
 
-        $this->json('GET', '/api/dashboard')
+        $product_count = $product->count();
+        $category_count = $category->count();
+
+        $this->json('GET', $this->endpoint)
             ->assertJsonStructure(
                 [
                     'groupByCategory' => [
@@ -43,16 +48,24 @@ class DashboardTest extends TestCase
                         ],
 
                     ],
-                    'last2DaysProducts',
+                    'last2DaysProducts' => [
+                        [
+                            'id',
+                            'name',
+                            'category_id',
+                            'type',
+                            'price',
+                            'description',
+                            'created_at',
+                            'updated_at',
+                        ],
+                    ],
                     'categories',
                     'products',
                 ]
             )->assertJsonFragment([
-                'categories' =>1,
-                'products',
-                'last2DaysProducts',
-                'groupByCategory',
-            ])
-            ->assertStatus(200);
-    } */
+                'categories' => $category_count,
+                'products' => $product_count,
+            ])->assertStatus(200);
+    }
 }

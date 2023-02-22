@@ -4,65 +4,66 @@ namespace Tests\Feature;
 
 use App\Models\Category;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class CategoryTest extends TestCase
 {
     use RefreshDatabase;
+    use WithFaker;
+
+    protected string $endpoint = 'api/categories/';
+
+    protected string $categoryTable = 'categories';
 
     public function testIndexCategory()
     {
         $category = Category::factory()->count(10)->create();
-        $response = $this->get('api/categories');
+        $response = $this->get($this->endpoint);
 
-        $this->assertDatabaseCount('categories', 10);
+        $this->assertDatabaseCount($this->categoryTable, 10);
     }
 
     public function testStoreCategory()
     {
-        $response = $this->post('api/categories', [
-            'name' => 'Tech',
-        ]);
+        $data = ['name' => $this->faker->name];
+        $response = $this->post($this->endpoint, $data);
 
         $response->assertStatus(201);
-        $this->assertDatabaseCount('categories', 1);
-        $this->assertDatabaseHas('categories', [
-            'name' => 'Tech',
-        ]);
+        $this->assertDatabaseCount($this->categoryTable, 1);
+        $this->assertDatabaseHas($this->categoryTable, $data);
     }
 
     public function testShowCategory()
     {
         $category = Category::factory()->create();
 
-        $response = $this->get('api/categories/'.$category->id);
+        $response = $this->get($this->endpoint.$category->id);
         $response->assertStatus(200);
         $response->assertSee($category->name);
 
-        $this->assertDatabaseCount('categories', 1);
+        $this->assertDatabaseCount($this->categoryTable, 1);
     }
 
     public function testUpdateCategory()
     {
         $category = Category::factory()->create();
 
-        $response = $this->put('api/categories/'.$category->id, [
-            'name' => 'Agriculture',
-        ]);
+        $data = ['name' => $this->faker->name];
+        $this->put($this->endpoint.$category->id, $data)->assertStatus(200);
 
         $category->refresh();
-        $response->assertStatus(200);
-        $this->assertEquals($category->name, 'Agriculture');
+        $this->assertEquals($category->name, $data['name']);
     }
 
     public function testDeleteCategory()
     {
         $category = Category::factory()->create();
 
-        $response = $this->delete('api/categories/'.$category->id);
+        $response = $this->delete($this->endpoint.$category->id);
         $response->assertStatus(204);
 
-        $this->assertDatabaseCount('categories', 0);
+        $this->assertDatabaseCount($this->categoryTable, 0);
         $this->assertModelMissing($category);
     }
 }
