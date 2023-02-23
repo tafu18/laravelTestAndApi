@@ -12,12 +12,46 @@ use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
-        //use product collectıon ProductResource::collection
+        $filter = $request->query('filter');
+        $search = $request->query('search');
+
+        $query = Product::all();
+
+        if ($filter != null) {
+            $query = $query->where('category_id', $filter);
+        }
+
+        if ($search != null) {
+            $query = $query->where('name', 'LIKE', "%$search%")
+            ->orWhere('description', 'LIKE', "%$search%")->get();
+        }
+
+        /* $query->paginate(5); */
+
         return response()->json([
-            'data' => ProductResource::collection(Product::paginate(1)),
+            'data' => ProductResource::collection($query),
         ]);
+
+        /*         if ($filter != null && $search != null) {
+                    $products = Product::where('category_id', $filter)->where(function ($query) use ($search) {
+                        $query->where('name', 'LIKE', "%$search%")
+                            ->orWhere('description', 'LIKE', "%$search%");
+                    })
+                        ->get();
+                } elseif ($search != null) {
+                    $products = Product::where('name', 'LIKE', "%$search%")
+                        ->orWhere('description', 'LIKE', "%$search%")
+                        ->get();
+                } elseif ($filter != null) {
+                    $products = Product::where('category_id', $filter)
+                        ->get();
+                } else $products = Product::paginate(5);
+
+                return response()->json([
+                    'data' => ProductResource::collection($products),
+                ]); */
     }
 
     public function store(StoreProductRequest $request): JsonResponse
@@ -52,23 +86,5 @@ class ProductController extends Controller
         $product->delete();
 
         return response()->json([], 204);
-    }
-
-    public function filterProduct(Request $request)
-    {
-        $category_id = $request->query('category_id');
-
-
-        $filteredProducts = Product::where('category_id', $category_id)->get();;
-
-        return  response()->json(['data' => $filteredProducts], 200);
-    }
-
-    public function searchProduct(Request $request){
-        $text = $request->query('text');
-
-        $searchedProducts = Product::where('name', 'LIKE', "%$text%")->orWhere('description', 'LIKE', "%$text%")->get();
-
-        return response()->json(['data' => $searchedProducts], 200);
     }
 }
