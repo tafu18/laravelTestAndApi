@@ -12,8 +12,6 @@ class Product extends Model
 
     protected $fillable = ['name', 'type', 'category_id', 'price', 'description'];
 
-    protected $filter = ['category_id'];
-
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);
