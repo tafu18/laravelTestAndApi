@@ -14,13 +14,13 @@ class ProductController extends Controller
 {
     public function index(): JsonResponse
     {
-        $filter = request('filter');
+        $category_id = request('category_id');
         $search = request('search');
 
         $products = Product::query();
 
-        $products->when($filter, function ($products) use ($filter) {
-            $products->where('category_id', $filter);
+        $products->when($category_id, function ($products) use ($category_id) {
+            $products->where('category_id', $category_id);
         });
 
         $products->when($search, function ($products) use ($search) {
@@ -28,12 +28,12 @@ class ProductController extends Controller
                 ->orWhere('description', 'LIKE', "%$search%");
         });
 
-        $products->when($filter && $search, function ($products) use ($filter, $search) {
-            $products->where('category_id', $filter)->where(function ($query) use ($search) {
+/*         $products->when($category_id && $search, function ($products) use ($category_id, $search) {
+            $products->where('category_id', $category_id)->where(function ($query) use ($search) {
                 $query->where('name', 'LIKE', "%$search%")
                     ->orWhere('description', 'LIKE', "%$search%");
             });
-        });
+        }); */
 
         $products = $products->get();
 
